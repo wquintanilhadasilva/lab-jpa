@@ -1,0 +1,22 @@
+version: "3.8"
+services:
+  postgres-lab:
+    container_name: postgres
+    image: postgres:${POSGRES_VERSION:-13-alpine}
+    expose:
+      - "5432"
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-lab-jpa}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    volumes:
+      - "postgres_lab_jpa:/var/lib/postgresql/data"
+    networks:
+      - lab-jpa_network
+
+networks:
+  lab-jpa_network:
+volumes:
+  postgres_lab_jpa:

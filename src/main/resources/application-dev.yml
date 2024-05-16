@@ -1,0 +1,30 @@
+logging:
+  level:
+    ROOT: INFO
+    com.lab.jpa: DEBUG
+
+spring:
+  #Datasource config
+  datasource:
+    url: jdbc:postgresql://localhost:5432/lab-jpa?useTimezone=true&serverTimezone=America/Sao_Paulo
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      poolName: Hikari
+      maximum-pool-size: 30
+      minimumIdle: ${DATABASE_MIN_POOL_SIZE:2}
+    jpa:
+      hibernate:
+        ddl-auto: none
+        format_sql: true
+      open-in-view: false
+      #    database-platform: org.hibernate.dialect.PostgreSQLDialect
+      show-sql: true
+      properties:
+        hibernate:
+          format_sql: true
+          jdbc:
+            time_zone: UTC
+            batch_size: 50
+        type: trace

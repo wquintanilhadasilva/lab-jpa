@@ -1,0 +1,9 @@
+logging:
+  level:
+    ROOT: INFO
+    com.lab.jpa: INFO
+
+
+spring:
+  profiles:
+    active: prod

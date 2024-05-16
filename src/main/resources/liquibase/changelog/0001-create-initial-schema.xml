@@ -1,0 +1,58 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        logicalFilePath="classpath:liquibase/changelog/0001-create-initial-schema.xml"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <!-- Criando o schema -->
+    <changeSet id="20240508-1" author="wedson.silva">
+        <sql dbms="postgresql" endDelimiter=";">
+            CREATE SCHEMA api
+        </sql>
+    </changeSet>
+
+   <!-- Criando as tabelas -->
+   <changeSet author="wedson.silva" id="20240508-2">
+        <createTable remarks="Tabela responsável por armazenar as Requisições enviadas pela CPFL" schemaName="api" tableName="requisicoes">
+            <column name="id" remarks="GUID - Chave primária da tabela" type="VARCHAR(60)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="requisiscoes_pkey"/>
+            </column>
+            <column name="request-start-time" remarks="Data de recebimento da requisição" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="request-end-time" remarks="Data de resposta da requisição recebida" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="request-ttl-time" remarks="Data limite para esse registro ser apagado automaticamente" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="request-documents-count" remarks="Quantidade de documentos enviados na requisição" type="SMALLINT"/>
+            <column name="content-bucket-type" remarks="Identificador do bucket onde está o payload dessa requisição" type="VARCHAR(255)"/>
+            <column name="content-bucket-path" remarks="Chave de recuperação do conteúdo enviado no bucket" type="VARCHAR(4000)"/>
+        </createTable>
+
+       <createTable remarks="Tabela responsável por armazenar as enviadas" schemaName="api" tableName="notas">
+           <column name="id" remarks="Chave primária da tabela" type="VARCHAR(60)">
+               <constraints nullable="false" primaryKey="true" primaryKeyName="notas_pkey"/>
+           </column>
+           <column name="request-start-time" remarks="Data de recebimento da requisição" type="TIMESTAMP WITHOUT TIME ZONE"/>
+           <column name="request-end-time" remarks="Data de resposta da requisição recebida" type="TIMESTAMP WITHOUT TIME ZONE"/>
+           <column name="request-ttl-time" remarks="Data limite para esse registro ser apagado automaticamente" type="TIMESTAMP WITHOUT TIME ZONE"/>
+           <column name="request-documents-count" remarks="Quantidade de documentos enviados na requisição" type="SMALLINT"/>
+           <column name="content-bucket-type" remarks="Identificador do bucket onde está o payload dessa requisição" type="VARCHAR(255)"/>
+           <column name="content-bucket-path" remarks="Chave de recuperação do conteúdo enviado no bucket" type="VARCHAR(4000)"/>
+       </createTable>
+
+    </changeSet>
+
+    <!-- Criando os indices -->
+    <changeSet author="wedson.silva" id="20240508-3">
+        <createIndex indexName="idx_request_start_time" tableName="requisicoes" schemaName= "api" unique="false">
+            <column name="request-start-time" remarks="Índice de performance para recuperar pela data de requisição"/>
+        </createIndex>
+        <createIndex indexName="idx_request_bucket_type" tableName="requisicoes" schemaName= "api" unique="false">
+            <column name="content-bucket-type" remarks="Índice de performance para recuperar pelo tipo de bucket"/>
+        </createIndex>
+        <createIndex indexName="idx_request_ttl_time" tableName="requisicoes" schemaName= "api" unique="false">
+            <column name="request-ttl-time" remarks="Índice de performance para recuperar registros vencidos"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
